@@ -1,0 +1,149 @@
+@mixin droid {
+  font-family: "Droid Sans", Arial, sans-serif;
+}
+
+@mixin background-gradient($a, $b) {
+  background-image: -webkit-linear-gradient(top, $a, $b);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, $a), color-stop(1, $b));
+  background-image: -moz-linear-gradient(top, $a, $b);
+  background-image: -o-linear-gradient(top, $a, $b);
+  filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr=$a, EndColorStr=$b)";
+  background-image: linear-gradient(top, $a, $b);
+}
+
+@mixin box-shadow($args) {
+  -webkit-box-shadow: $args;
+  -moz-box-shadow: $args;
+  box-shadow: $args;
+}
+
+@mixin border-radius($radius) {
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+  border-radius: $radius;
+}
+
+@mixin bar {
+  background-color: #222;
+  @include background-gradient(#333, #222);
+  @include box-shadow(inset 0 -1px 0 rgba(0, 0, 0, 0.1));
+}
+
+body, div, h3, a, span, ul, li {
+  margin: 0px;
+  padding: 0px;
+  @include droid;
+}
+
+div#header {
+  position: fixed;
+  display: table;
+  padding-left: 10px;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 35px;
+  color: #eee;
+  @include bar;
+
+  h3 {
+    font-size: 18px;
+    display: table-cell;
+    vertical-align: middle;
+    font-weight: 300;
+    a {
+      color: #eee;
+    }
+  }
+}
+
+$base: #f9f9f9;
+#sidebar {
+  position: fixed;
+  top: 50px;
+  left: 0px;
+  width: 200px;
+  height: 90%;
+  z-index: 9999;
+
+  #stream-list {
+    height: 100%;
+    overflow: auto;
+
+    ul {
+      #toggle-sidebar {
+        font-size: 18px;
+      }
+
+      li {
+        list-style: none;
+        cursor: pointer;
+        border-right: 1px solid #ddd;
+        background-color: lighten($base, 5%);
+        padding: 5px;
+
+        &:hover {
+          background-color: darken($base, 8%);
+        }
+
+        &:nth-child(odd) {
+          background-color: $base;
+          border-bottom: 1px solid #ddd;
+        }
+
+        &:first-child {
+          @include border-radius(0px 5px 0px 0px);
+          border-top: 1px solid #ddd;
+        }
+
+        &:last-child {
+          @include border-radius(0px 0px 5px 0px);
+          border-bottom: 1px solid #ddd;
+        }
+      }
+    }
+  }
+}
+
+.ui-dialog {
+  background-color: #333;
+  padding: 10px;
+  @include border-radius(5px);
+
+  .ui-dialog-titlebar {
+    margin-bottom: 10px;
+    padding-left: 10px;
+    height: 30px;
+    width: 100%;
+    display: table;
+    @include bar;
+    @include border-radius(5px);
+
+    span.ui-dialog-title {
+      display: table-cell;
+      vertical-align: middle;
+      color: #eee;
+    }
+
+    a.ui-dialog-titlebar-close {
+      span { display: none; }
+      position: absolute;
+      right: 20px;
+      height: 30px;
+      width: 15px;
+      background: url(../images/close.png) no-repeat center center;
+    }
+  }
+
+  .ui-dialog-content {
+    margin-bottom: 5px;
+  }
+
+  .ui-resizable-se {
+    cursor: se-resize;
+    width: 100%;
+    height: 13px;
+    bottom: 3px;
+    background: url(../images/resize.png) no-repeat right bottom;
+  }
+}
