@@ -181,6 +181,16 @@ $base: #f9f9f9;
     @include bar;
     @include border-radius(5px);
 
+    .unlocked, .locked {
+      position: absolute;
+      right: 40px;
+      margin-top: 4px;
+      width: 20px;
+      height: 20px;
+    }
+    .unlocked { background: url(../images/unlocked.gif) no-repeat center center; }
+    .locked   { background: url(../images/locked.gif)   no-repeat center center; }
+
     span.ui-dialog-title {
       display: table-cell;
       vertical-align: middle;
