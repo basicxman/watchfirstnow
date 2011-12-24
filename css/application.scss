@@ -79,6 +79,8 @@ body, div, h3, a, span, ul, li {
   @include button(#333);
 }
 
+#blank-stream { display: none; }
+
 .stream {
   .stream-controls {
     height: 30px;

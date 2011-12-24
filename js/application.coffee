@@ -13,12 +13,6 @@ window.getCookie = (name) ->
 
   return null;
 
-addSidebarItem = (stream) ->
-  elm = $("<li class='toggle-stream'></li>");
-  elm.attr("id", "toggle-stream-#{stream.id}")
-  elm.html("<span>#{stream.name}</span>")
-  elm.insertAfter("#stream-list li:last")
-
 window.setOpenDialogCookie = ->
   id = $(this).attr("id")
   pos = $(this).parent().position()
@@ -36,7 +30,7 @@ window.setClose = ->
   setCookie(id, "close")
   $("#toggle-#{id} span").text($("#toggle-#{id}").text().substring(2))
 
-window.resizeStream   = (event) ->
+window.resizeStream = (event) ->
   height = $(this).height() - $(this).children(".stream-controls").height()
   $(this).children(".stream-embed").css("height", height)
 
@@ -47,6 +41,19 @@ window.streamCallback = (data) ->
   if not $.streams? or data.version >= $.streams.version
     $.streams = data
     executeStreams()
+
+changeVideoSize = (stream, width, height) ->
+  dY = stream.dialog("option", "height") - stream.children(".stream-embed").height()
+  stream.css("width", width)
+  stream.css("height", height + stream.children(".stream-controls").height())
+  stream.dialog("option", { width: width, height: height + dY })
+  resizeStream.call(stream)
+
+addSidebarItem = (stream) ->
+  elm = $("<li class='toggle-stream'></li>");
+  elm.attr("id", "toggle-stream-#{stream.id}")
+  elm.html("<span>#{stream.name}</span>")
+  elm.insertAfter("#stream-list li:last")
 
 addDialog = (id, embed, name, width, height) ->
   elm = $("#blank-stream").clone()
@@ -110,13 +117,6 @@ executeStreams = ->
       $("#toggle-sidebar span").text("Close Streams")
 
     $(elm).css("display", temp) for elm in $("#toggle-sidebar ~ li")
-
-changeVideoSize = (stream, width, height) ->
-  elm = stream.children(".stream-embed")
-  dX = stream.parent().width() - elm.width()
-  dY = stream.parent().height() - elm.height()
-  stream.dialog("option", { width: width + dX, height: height + dY })
-  resizeStream.call(stream)
 
 loadStream = ->
   $.getScript("js/streams.js")
