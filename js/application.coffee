@@ -42,6 +42,11 @@ window.streamCallback = (data) ->
     $.streams = data
     executeStreams()
 
+window.scoresCallback = (data) ->
+  for tweet in data.reverse()
+    displayScore(parseTweet(tweet.text))
+    $.latestTweet = tweet.id_str
+
 changeVideoSize = (stream, width, height) ->
   dY = stream.dialog("option", "height") - stream.children(".stream-embed").height()
   stream.css("width", width)
@@ -121,8 +126,43 @@ executeStreams = ->
 loadStream = ->
   $.getScript("js/streams.js")
 
+parseTweet = (text) ->
+  {
+      eventCode:   text.match(/#FRC([a-zA-Z0-9]+)\s/)[1]
+    , matchType:   text.match(/TY\s([A-Z]{1})/)[1]
+    , matchNumber: text.match(/MC\s([0-9]+)/)[1]
+    , redScore:    text.match(/RF\s([0-9]+)/)[1]
+    , blueScore:   text.match(/BF\s([0-9]+)/)[1]
+    , redTeams:    text.match(/RE\s([0-9]+)\s([0-9]+)\s([0-9]+)/).slice(1).join("<br />")
+    , blueTeams:   text.match(/BL\s([0-9]+)\s([0-9]+)\s([0-9]+)/).slice(1).join("<br />")
+    , redBonus:    text.match(/RB\s([0-9]+)/)[1]
+    , blueBonus:   text.match(/BB\s([0-9]+)/)[1]
+    , redPenalty:  text.match(/RP\s([0-9]+)/)[1]
+    , bluePenalty: text.match(/BP\s([0-9]+)/)[1]
+  }
+
+displayScore = (score) ->
+  elm = $("#blank-score").clone()
+  elm.removeAttr("id")
+  elm.find(".ec").text(score.eventCode)
+  elm.find(".mn").addClass(score.matchType)
+  elm.find(".mn").text(score.matchType + score.matchNumber)
+  elm.find(".rs").text(score.redScore)
+  elm.find(".rt").html(score.redTeams)
+  elm.find(".bs").text(score.blueScore)
+  elm.find(".bt").html(score.blueTeams)
+  elm.insertBefore("div#scores ul li:first")
+
+loadScores = ->
+  url = "http://api.twitter.com/1/statuses/user_timeline.json?screen_name=frcfms&count=10&callback=scoresCallback"
+  if $.latestTweet?
+    url += "&since_id=#{$.latestTweet}"
+  $.getScript(url)
+  setTimeout(loadScores, 60000)
+
 jQuery ->
   loadStream()
+  loadScores()
 
   $(".toggle-stream").live "click", (event) ->
     streamID = $(this).attr("id").substring(7)

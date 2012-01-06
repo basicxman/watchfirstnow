@@ -80,6 +80,47 @@ body, div, h3, a, span, ul, li {
 }
 
 #blank-stream { display: none; }
+#blank-score  { display: none; }
+
+div#scores {
+  position: fixed;
+  right: 0px;
+  top: 35px;
+  ul {
+    li + li {
+      padding-top: 20px;
+    }
+
+    li {
+      list-style: none;
+      width: 200px;
+      div.match-info {
+        float: left;
+        width: 40px;
+        font-size: 18px;
+
+        .mn.P { color: #666; }
+        .mn.Q { color: #333; }
+        .mn.E { color: #000; }
+      }
+
+      div.match-teams {
+        float: right;
+        div { padding: 0px 10px; }
+        .rs, .bs { font-weight: bold; }
+        .red-alliance {
+          float: left;
+          width: 80px;
+          color: red;
+        }
+        .blue-alliance {
+          float: left;
+          color: blue;
+        }
+      }
+    }
+  }
+}
 
 .stream {
   .stream-controls {
