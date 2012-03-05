@@ -27,11 +27,61 @@ class Streams
   def add_source(url, name)
     if url =~ /ustream/
       @streams["streams"] << ustream(url, name)
+    elsif url =~ /justin/
+      @streams["streams"] << justintv(url, name)
+    elsif url =~ /\.asf/
+      @streams["streams"] << asf(url, name)
+    elsif url =~ /granite/
+      @streams["streams"] << granite_state(name)
     else
       return
     end
 
     @streams["lastid"] += 1
+  end
+
+  def granite_state(name)
+    view_path = File.expand_path("rtmp.erb", VIEWS_PATH)
+    embed = r(view_path)
+
+    {
+      "id" => @streams["lastid"] + 1,
+      "name" => name,
+      "embed" => embed
+    }
+  end
+
+  def asf(url, name)
+    @embedurl = url
+    view_path = File.expand_path("asf.erb", VIEWS_PATH)
+    embed = r(view_path)
+
+    {
+      "id" => @streams["lastid"] + 1,
+      "name" => name,
+      "embed" => embed
+    }
+  end
+
+  def justintv(url, name)
+    doc = Nokogiri::HTML(open(url))
+    content = doc.inner_html
+
+    @embedurl = doc.inner_html.match(/http:\/\/www-cdn.jtvnw.*?\.swf/)[0]
+    @channelname = url.split("/").last
+
+    embed_view_path = File.expand_path("justintv.erb", VIEWS_PATH)
+    embed = r(embed_view_path)
+    chat_embed_view_path = File.expand_path("justintvchat.erb", VIEWS_PATH)
+    chat_embed = r(chat_embed_view_path)
+
+    {
+      "id" => @streams["lastid"] + 1,
+      "name" => name,
+      "permalink" => url,
+      "embed" => embed,
+      "chat_embed" => chat_embed
+    }
   end
 
   def ustream(url, name)

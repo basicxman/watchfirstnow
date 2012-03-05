@@ -89,7 +89,7 @@ addDialog = (id, embed, name, width, height) ->
   elm
 
 addStream = (stream) ->
-  elm = addDialog("stream-#{stream.id}", stream.embed, stream.name, 480, 320)
+  elm = addDialog("stream-#{stream.id}", stream.embed, stream.name, 480, 400)
   resizeStream.call(elm)
   if stream.permalink?
     permalink = elm.find(".stream-permalink")
