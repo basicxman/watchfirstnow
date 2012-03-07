@@ -23,12 +23,12 @@ window.setOpenDialogCookie = ->
 window.setOpen = ->
   setOpenDialogCookie.call($(this))
   id = $(this).attr("id")
-  $("#toggle-#{id} span").text("~ #{$("#toggle-#{id}").text()}")
+  $("#toggle-#{id} span").text("~ #{$("#toggle-#{id} span").text()}")
 
 window.setClose = ->
   id = $(this).attr("id")
   setCookie(id, "close")
-  $("#toggle-#{id} span").text($("#toggle-#{id}").text().substring(2))
+  $("#toggle-#{id} span").text($("#toggle-#{id} span").text().substring(2))
 
 window.resizeStream = (event) ->
   height = $(this).height() - $(this).children(".stream-controls").height()
@@ -54,11 +54,28 @@ changeVideoSize = (stream, width, height) ->
   stream.dialog("option", { width: width, height: height + dY })
   resizeStream.call(stream)
 
+addSidebarSubItem = (stream) ->
+  if not stream.eventCode?
+    return ""
+
+  matchResults = "http://www2.usfirst.org/2012comp/Events/#{stream.eventCode}/matchresults.html"
+  rankings = "http://www2.usfirst.org/2012comp/Events/#{stream.eventCode}/rankings.html"
+  awards = "http://www2.usfirst.org/2012comp/Events/#{stream.eventCode}/awards.html"
+  qualifications = "http://www2.usfirst.org/2012comp/events/#{stream.eventCode}/schedulequal.html"
+  eliminations = "http://www2.usfirst.org/2012comp/events/#{stream.eventCode}/scheduleelim.html"
+  elm = $("#meta").clone()
+  elm.find(".match-results").attr("href", matchResults)
+  elm.find(".rankings").attr("href", rankings)
+  elm.find(".awards").attr("href", awards)
+  elm.find(".qualifications").attr("href", qualifications)
+  elm.find(".eliminations").attr("href", eliminations)
+  return elm.html()
+
 addSidebarItem = (stream) ->
   elm = $("<li class='toggle-stream'></li>");
   elm.attr("id", "toggle-stream-#{stream.id}")
-  elm.html("<span>#{stream.name}</span>")
-  elm.insertAfter("#stream-list li:last")
+  elm.html("<span>#{stream.name}</span>" + addSidebarSubItem(stream))
+  elm.insertAfter("#stream-list > ul > li:last")
 
 addDialog = (id, embed, name, width, height) ->
   elm = $("#blank-stream").clone()
@@ -131,8 +148,8 @@ loadStream = ->
 jQuery ->
   loadStream()
 
-  $(".toggle-stream").live "click", (event) ->
-    streamID = $(this).attr("id").substring(7)
+  $(".toggle-stream span").live "click", (event) ->
+    streamID = $(this).parent().attr("id").substring(7)
     stream = $("##{streamID}")
     if stream.dialog("isOpen")
       newState = "close"

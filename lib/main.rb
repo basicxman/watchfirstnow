@@ -24,19 +24,24 @@ class Streams
     end
   end
 
-  def add_source(url, name)
+  def add_source(url, name, event_code)
+    stream = {
+      "id" => @streams["lastid"] + 1,
+      "eventCode" => eventCode
+    }
     if url =~ /ustream/
-      @streams["streams"] << ustream(url, name)
+      stream.merge! ustream(url, name)
     elsif url =~ /justin/
-      @streams["streams"] << justintv(url, name)
+      stream.merge! justintv(url, name)
     elsif url =~ /\.asf/
-      @streams["streams"] << asf(url, name)
+      stream.merge! asf(url, name)
     elsif url =~ /granite/
-      @streams["streams"] << granite_state(name)
+      stream.merge! << granite_state(name)
     else
       return
     end
 
+    @streams["streams"] << stream
     @streams["lastid"] += 1
   end
 
@@ -45,9 +50,8 @@ class Streams
     embed = r(view_path)
 
     {
-      "id" => @streams["lastid"] + 1,
-      "name" => name,
-      "embed" => embed
+      "name"      => name,
+      "embed"     => embed,
     }
   end
 
@@ -57,9 +61,8 @@ class Streams
     embed = r(view_path)
 
     {
-      "id" => @streams["lastid"] + 1,
-      "name" => name,
-      "embed" => embed
+      "name"      => name,
+      "embed"     => embed,
     }
   end
 
@@ -76,11 +79,10 @@ class Streams
     chat_embed = r(chat_embed_view_path)
 
     {
-      "id" => @streams["lastid"] + 1,
-      "name" => name,
-      "permalink" => url,
-      "embed" => embed,
-      "chat_embed" => chat_embed
+      "name"       => name,
+      "permalink"  => url,
+      "embed"      => embed,
+      "chat_embed" => chat_embed,
     }
   end
 
@@ -97,7 +99,6 @@ class Streams
     chat_embed.gsub! "586", "100%"
 
     {
-      "id"         => @streams["lastid"] + 1,
       "name"       => name,
       "permalink"  => url,
       "embed"      => embed,

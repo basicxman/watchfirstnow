@@ -169,7 +169,7 @@ $base: #f9f9f9;
     height: 100%;
     overflow: auto;
 
-    ul {
+    > ul {
       #toggle-sidebar {
         font-size: 18px;
       }
@@ -187,6 +187,28 @@ $base: #f9f9f9;
           width: 200px;
           display: table-cell;
           vertical-align: middle;
+        }
+
+        ul {
+          display: none;
+          z-index: 2000;
+          position: absolute;
+          left: 200px;
+          li {
+            width: 200px;
+            display: table;
+            cursor: pointer;
+            a {
+              display: table-cell;
+              vertical-align: middle;
+              text-decoration: none;
+              color: #000;
+            }
+          }
+        }
+
+        &:hover {
+          ul { display: block; }
         }
 
         &:nth-child(odd) {
@@ -270,4 +292,8 @@ $base: #f9f9f9;
   position: fixed;
   bottom: 0px;
   padding: 20px;
+}
+
+.meta {
+  display: none;
 }
