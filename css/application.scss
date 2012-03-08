@@ -82,40 +82,49 @@ body, div, h3, a, span, ul, li {
 #blank-stream { display: none; }
 #blank-score  { display: none; }
 
-div#scores {
-  position: fixed;
-  right: 0px;
-  top: 35px;
+div#stream-scores {
   ul {
+    height: 100%;
+    width: 100%;
+    overflow-y: scroll;
+    color: #eee;
+    padding-left: 5px;
     li + li {
       padding-top: 20px;
     }
 
     li {
       list-style: none;
-      width: 200px;
+      width: 100%;
       div.match-info {
         float: left;
         width: 40px;
         font-size: 18px;
 
-        .mn.P { color: #666; }
-        .mn.Q { color: #333; }
-        .mn.E { color: #000; }
+        .mn.P { color: #aaa; }
+        .mn.Q { color: #ccc; }
+        .mn.E { color: #eee; }
+        .co { font-style: italic; }
       }
 
       div.match-teams {
-        float: right;
+        float: left;
         div { padding: 0px 10px; }
-        .rs, .bs { font-weight: bold; }
+        .rs, .bs, .b, .f, .t, .h { font-weight: bold; }
+        .blue-alliance, .bb, .bf, .bh, .bto { color: #39f; }
+        .red-alliance, .rb, .rf, .rh, .rto { color: #f00; }
+
         .red-alliance {
           float: left;
-          width: 80px;
-          color: red;
+          width: 50px;
         }
         .blue-alliance {
           float: left;
-          color: blue;
+          width: 50px;
+        }
+        .bridge, .fouls, .hybrid, .teleop {
+          float: left;
+          width: 50px;
         }
       }
     }

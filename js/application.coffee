@@ -42,10 +42,33 @@ window.streamCallback = (data) ->
     $.streams = data
     executeStreams()
 
+window.addTweet = (score) ->
+  elm = $("#blank-score").clone()
+  elm.removeAttr("id")
+  elm.find(".ec").text(score.eventCode)
+  elm.find(".mn").addClass(score.matchType)
+  elm.find(".mn").text(score.matchType + score.matchNumber)
+  elm.find(".rs").text(score.redScore)
+  elm.find(".rt").html(score.redTeams)
+  elm.find(".bs").text(score.blueScore)
+  elm.find(".bt").html(score.blueTeams)
+  elm.find(".co").text(score.coopertition)
+  elm.find(".bb").text(score.blueBridge)
+  elm.find(".rb").text(score.redBridge)
+  elm.find(".bf").text(score.blueFouls)
+  elm.find(".rf").text(score.redFouls)
+  elm.find(".bto").text(score.blueTeleop)
+  elm.find(".rto").text(score.redTeleop)
+  elm.find(".bh").text(score.blueHybrid)
+  elm.find(".rh").text(score.redHybrid)
+  elm.insertBefore("div#stream-scores ul li:first")
+
 window.scoresCallback = (data) ->
-  for tweet in data.reverse()
-    displayScore(parseTweet(tweet.text))
-    $.latestTweet = tweet.id_str
+  data = $.parseJSON(data);
+  for tweet in data
+    if not $.latestTweet? or $.latestTweet < tweet.id
+      addTweet(tweet)
+      $.latestTweet = tweet.id
 
 changeVideoSize = (stream, width, height) ->
   dY = stream.dialog("option", "height") - stream.children(".stream-embed").height()
@@ -77,6 +100,15 @@ addSidebarItem = (stream) ->
   elm.html("<span>#{stream.name}</span>" + addSidebarSubItem(stream))
   elm.insertAfter("#stream-list > ul > li:last")
 
+window.openDialogState = (elm, id) ->
+  state = getCookie(id)
+  if state? and state != "close"
+    data = state.split(":")
+    pos  = data[0].split("x")
+    size = data[1].split("x")
+    elm.dialog("option", { width: Number(size[0]), height: Number(size[1]), position: [Number(pos[0]), Number(pos[1])] })
+    elm.dialog("open")
+
 addDialog = (id, embed, name, width, height) ->
   elm = $("#blank-stream").clone()
   elm.attr("id", id)
@@ -95,14 +127,7 @@ addDialog = (id, embed, name, width, height) ->
 
   $("<div class='unlocked'></div>").insertAfter(elm.parent().find(".ui-dialog-titlebar span:first"))
 
-  state = getCookie(id)
-  if state? and state != "close"
-    data = state.split(":")
-    pos  = data[0].split("x")
-    size = data[1].split("x")
-    elm.dialog("option", { width: Number(size[0]), height: Number(size[1]), position: [Number(pos[0]), Number(pos[1])] })
-    elm.dialog("open")
-
+  openDialogState(elm, id)
   elm
 
 addStream = (stream) ->
@@ -145,8 +170,29 @@ executeStreams = ->
 loadStream = ->
   $.getScript("js/streams.js")
 
+window.loadScores = ->
+  console.log("Executing")
+  $.get("frcfms.js", scoresCallback)
+  console.log("Setting timeout")
+  setTimeout(loadScores, 60000)
+
 jQuery ->
+  $("#stream-scores").dialog({
+      title: "Match Results"
+    , autoOpen: false
+    , width: 500
+    , height: 400
+    , open: setOpen
+    , close: setClose
+    , resize: resizeStream
+    , dragStop: setOpenDialogCookie
+    , resizeStop: setOpenDialogCookie
+  })
+  openDialogState($("#stream-scores"), "stream-scores")
+  addSidebarItem({ id: "scores", name: "Match Results" })
+
   loadStream()
+  loadScores()
 
   $(".toggle-stream span").live "click", (event) ->
     streamID = $(this).parent().attr("id").substring(7)

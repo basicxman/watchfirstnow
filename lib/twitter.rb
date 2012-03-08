@@ -1,4 +1,5 @@
 require "net/http"
+require "net/ftp"
 require "json"
 
 url = "http://api.twitter.com/1/statuses/user_timeline.json?screen_name=frcfms&count=100"
@@ -13,6 +14,8 @@ data.sort! { |a, b| a["created_at"] <=> b["created_at"] }
 data.map! do |tweet|
   text = tweet["text"]
   {
+    :id           => tweet["id_str"],
+    :date         => tweet["created_at"],
     :eventCode    => text.match(/#FRC([a-zA-Z0-9]+)\s/)[1],
     :matchType    => text.match(/TY\s([A-Z]{1})/)[1],
     :matchNumber  => text.match(/MC\s([0-9]+)/)[1],
@@ -32,5 +35,13 @@ data.map! do |tweet|
   }
 end
 
-data = data + JSON.load(File.read("frcfms.json")) if File.exists? "frcfms.json"
-File.open("frcfms.json", "w") { |f| f.write data.to_json }
+data = data + JSON.load(File.read("frcfms.js")) if File.exists? "frcfms.js"
+File.open("frcfms.js", "w") { |f| f.write data.to_json }
+
+host, user, pass = File.read("ftp.credentials").split(" ")
+ftp = Net::FTP.new
+ftp.connect(host, 21)
+ftp.login(user, pass)
+ftp.chdir("wwwroot")
+ftp.put("frcfms.js")
+ftp.close

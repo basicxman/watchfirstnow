@@ -3,4 +3,5 @@ streams.js*
 application.css
 application.js
 last_twitter_id
-frcfms.json
+frcfms.js
+ftp.credentials
