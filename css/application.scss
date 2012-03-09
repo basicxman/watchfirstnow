@@ -252,7 +252,6 @@ $base: #f9f9f9;
   }
 
   .ui-dialog-titlebar {
-    padding-left: 10px;
     height: 25px;
     width: 100%;
     @include bar;
@@ -273,6 +272,8 @@ $base: #f9f9f9;
     .inner-title, .title-controls, select, .chatbutton, .unlocked, .locked {
       float: left;
     }
+
+    .inner-title { padding-left: 10px; }
 
     .unlocked { background: url(../images/unlocked.gif) no-repeat center center; }
     .locked   { background: url(../images/locked.gif)   no-repeat center center; }
