@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 require "net/http"
 require "net/ftp"
 require "json"
@@ -29,9 +31,9 @@ data.map! do |tweet|
     :blueFouls    => text.match(/BFP\s([0-9]+)/)[1],
     :redHybrid    => text.match(/RHS\s([0-9]+)/)[1],
     :blueHybrid   => text.match(/BHS\s([0-9]+)/)[1],
-    :redTeleop    => text.match(/RTS\s([0-9+])/)[1],
-    :blueTeleop   => text.match(/BTS\s([0-9+])/)[1],
-    :coopertition => text.match(/CP\s([0-9+])/)[1]
+    :redTeleop    => text.match(/RTS\s([0-9]+)/)[1],
+    :blueTeleop   => text.match(/BTS\s([0-9]+)/)[1],
+    :coopertition => text.match(/CP\s([0-9]+)/)[1]
   }
 end
 

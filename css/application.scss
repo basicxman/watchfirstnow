@@ -168,15 +168,20 @@ div#header {
 
 $base: #f9f9f9;
 #sidebar {
-  position: fixed;
+  position: absolute;
   top: 35px;
   left: 0px;
   width: 200px;
   height: 90%;
+  z-index: 9000;
+
+  &:hover {
+    #stream-list ul li span.sidebar-event-code { display: table-cell; }
+  }
 
   #stream-list {
     height: 100%;
-    overflow: auto;
+    z-index: 9999;
 
     > ul {
       #toggle-sidebar {
@@ -196,11 +201,15 @@ $base: #f9f9f9;
           width: 200px;
           display: table-cell;
           vertical-align: middle;
+
+          &.sidebar-event-code {
+            font-size: 70%;
+            display: none;
+          }
         }
 
         ul {
           display: none;
-          z-index: 2000;
           position: absolute;
           left: 200px;
           li {

@@ -8,6 +8,8 @@ class Streams
   STREAMS_PATH = File.expand_path("../js/streams.js", File.dirname(__FILE__))
   VIEWS_PATH   = File.expand_path("views", File.dirname(__FILE__))
 
+  attr_accessor :streams
+
   def initialize
     jsonp = File.read(STREAMS_PATH)
     start = jsonp.index("{")
@@ -27,7 +29,7 @@ class Streams
   def add_source(url, name, event_code)
     stream = {
       "id" => @streams["lastid"] + 1,
-      "eventCode" => eventCode
+      "eventCode" => event_code
     }
     if url =~ /ustream/
       stream.merge! ustream(url, name)
@@ -36,7 +38,19 @@ class Streams
     elsif url =~ /\.asf/
       stream.merge! asf(url, name)
     elsif url =~ /granite/
-      stream.merge! << granite_state(name)
+      stream.merge! granite_state(name)
+    elsif url =~ /wpi/
+      stream.merge! worcester(name)
+    elsif url =~ /florida/
+      stream.merge! florida(name)
+    elsif url =~ /mms/
+      stream.merge! mms(url, name)
+    elsif url =~ /oregon/
+      stream.merge! oregon(name)
+    elsif url =~ /rutger/
+      stream.merge! rutger(name)
+    elsif url =~ /rtmp/
+      stream.merge! rtmp(url, name)
     else
       return
     end
@@ -45,13 +59,65 @@ class Streams
     @streams["lastid"] += 1
   end
 
-  def granite_state(name)
+  def rutger(name)
+    view_path = File.expand_path("rutgers.erb", VIEWS_PATH)
+    embed = r(view_path)
+
+    {
+      "name" => name,
+      "embed" => embed
+    }
+  end
+
+  def oregon(name)
+    view_path = File.expand_path("oregon.erb", VIEWS_PATH)
+    embed = r(view_path)
+
+    {
+      "name" => name,
+      "embed" => embed
+    }
+  end
+
+  def mms(url, name)
+    @mms_url = url
+    view_path = File.expand_path("mms.erb", VIEWS_PATH)
+    embed = r(view_path)
+
+    {
+      "name" => name,
+      "embed" => embed
+    }
+  end
+
+  def florida(name)
+    view_path = File.expand_path("florida.erb", VIEWS_PATH)
+    embed = r(view_path)
+
+    {
+      "name" => name,
+      "embed" => embed
+    }
+  end
+
+  def worcester(name)
+    view_path = File.expand_path("wpi.erb", VIEWS_PATH)
+    embed = r(view_path)
+
+    {
+      "name" => name,
+      "embed" => embed
+    }
+  end
+
+  def rtmp(url, name)
+    @rtmp_value = url
     view_path = File.expand_path("rtmp.erb", VIEWS_PATH)
     embed = r(view_path)
 
     {
-      "name"      => name,
-      "embed"     => embed,
+      "name" => name,
+      "embed" => embed
     }
   end
 

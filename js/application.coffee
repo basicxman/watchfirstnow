@@ -23,12 +23,12 @@ window.setOpenDialogCookie = ->
 window.setOpen = ->
   setOpenDialogCookie.call($(this))
   id = $(this).attr("id")
-  $("#toggle-#{id} span").text("~ #{$("#toggle-#{id} span").text()}")
+  $("#toggle-#{id} span").html("~ #{$("#toggle-#{id} span").html()}")
 
 window.setClose = ->
   id = $(this).attr("id")
   setCookie(id, "close")
-  $("#toggle-#{id} span").text($("#toggle-#{id} span").text().substring(2))
+  $("#toggle-#{id} span").html($("#toggle-#{id} span").html().substring(2))
 
 window.resizeStream = (event) ->
   height = $(this).height() - $(this).children(".stream-controls").height()
@@ -92,12 +92,21 @@ addSidebarSubItem = (stream) ->
   elm.find(".awards").attr("href", awards)
   elm.find(".qualifications").attr("href", qualifications)
   elm.find(".eliminations").attr("href", eliminations)
+
+  if stream.chiefDelphi?
+    elm.find(".chiefdelphi").attr("href", stream.chiefDelphi)
+  else
+    elm.find(".chiefdelphi").parent().remove()
+
   return elm.html()
 
 addSidebarItem = (stream) ->
   elm = $("<li class='toggle-stream'></li>");
   elm.attr("id", "toggle-stream-#{stream.id}")
-  elm.html("<span>#{stream.name}</span>" + addSidebarSubItem(stream))
+  eventCode = ""
+  if stream.eventCode?
+    eventCode = " <span class='sidebar-event-code'>[#{stream.eventCode}]</span>"
+  elm.html("<span>#{stream.name}#{eventCode}</span>" + addSidebarSubItem(stream))
   elm.insertAfter("#stream-list > ul > li:last")
 
 window.openDialogState = (elm, id) ->
@@ -108,6 +117,9 @@ window.openDialogState = (elm, id) ->
     size = data[1].split("x")
     elm.dialog("option", { width: Number(size[0]), height: Number(size[1]), position: [Number(pos[0]), Number(pos[1])] })
     elm.dialog("open")
+    return true
+
+  return false
 
 addDialog = (id, embed, name, width, height) ->
   elm = $("#blank-stream").clone()
@@ -128,6 +140,14 @@ addDialog = (id, embed, name, width, height) ->
   $("<div class='unlocked'></div>").insertAfter(elm.parent().find(".ui-dialog-titlebar span:first"))
 
   openDialogState(elm, id)
+
+  # Special cases
+  if name == "Autodesk Oregon"
+    elm.dialog("option", {
+      width: 950,
+      height: 500
+    })
+
   elm
 
 addStream = (stream) ->
@@ -171,9 +191,7 @@ loadStream = ->
   $.getScript("js/streams.js")
 
 window.loadScores = ->
-  console.log("Executing")
   $.get("frcfms.js", scoresCallback)
-  console.log("Setting timeout")
   setTimeout(loadScores, 60000)
 
 jQuery ->
@@ -188,8 +206,10 @@ jQuery ->
     , dragStop: setOpenDialogCookie
     , resizeStop: setOpenDialogCookie
   })
-  openDialogState($("#stream-scores"), "stream-scores")
-  addSidebarItem({ id: "scores", name: "Match Results" })
+  name = "Match Results"
+  if openDialogState($("#stream-scores"), "stream-scores")
+    name = "~ " + name
+  addSidebarItem({ id: "scores", name: name })
 
   loadStream()
   loadScores()
