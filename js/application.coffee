@@ -186,9 +186,9 @@ executeStreams = ->
   temp = getCookie("sidebar")
   if temp?
     if temp == "none"
-      $("#toggle-sidebar span").text("Open Streams")
+      $("#toggle-sidebar span").text("Show Menu")
     else
-      $("#toggle-sidebar span").text("Close Streams")
+      $("#toggle-sidebar span").text("Hide Menu")
 
     $(elm).css("display", temp) for elm in $("#toggle-sidebar ~ li")
 
@@ -219,8 +219,8 @@ jQuery ->
   loadStream()
   loadScores()
 
-  $(".toggle-stream span").live "click", (event) ->
-    streamID = $(this).parent().attr("id").substring(7)
+  $(".toggle-stream").live "click", (event) ->
+    streamID = $(this).attr("id").substring(7)
     stream = $("##{streamID}")
     if stream.dialog("isOpen")
       newState = "close"
@@ -234,11 +234,11 @@ jQuery ->
     if sidebar.is(":visible")
       sidebar.fadeOut()
       setCookie("sidebar", "none")
-      $(this).children("span").text("Open Streams")
+      $(this).children("span").text("Show Menu")
     else
       sidebar.fadeIn()
       setCookie("sidebar", "table")
-      $(this).children("span").text("Close Streams")
+      $(this).children("span").text("Hide Menu")
 
   $(".toggle-chat").live "click", (event) ->
     showChat($(this).parents(".ui-dialog").children(".stream"))
