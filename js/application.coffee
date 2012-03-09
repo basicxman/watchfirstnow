@@ -34,9 +34,6 @@ window.resizeStream = (event) ->
   height = $(this).height() - $(this).children(".stream-controls").height()
   $(this).children(".stream-embed").css("height", height)
 
-  if event?
-    $(this).find(".standard-sizes").val("Video sizes...")
-
 window.streamCallback = (data) ->
   if not $.streams? or data.version >= $.streams.version
     $.streams = data
@@ -130,8 +127,11 @@ addDialog = (id, embed, name, width, height) ->
   elm = $("#blank-stream").clone()
   elm.attr("id", id)
   elm.children(".stream-embed").html(embed)
+  elm.find(".inner-title").text(name)
+  title = elm.find(".stream-title").html()
+  elm.find(".stream-title").remove()
   elm.dialog({
-      title: name
+      title: title
     , autoOpen: false
     , width: width
     , height: height
@@ -165,9 +165,9 @@ addStream = (stream) ->
 
   if stream.chat_embed?
     chat = addDialog("chat-stream-#{stream.id}", stream.chat_embed, "#{stream.name} Chat", 320, 480)
-    chat.find(".stream-controls").remove()
+    chat.parent().find(".title-controls").remove()
   else
-    elm.find(".toggle-chat").remove()
+    elm.parent().parent().find(".toggle-chat").remove()
 
 showChat = (elm) ->
   chat = $("#chat-#{elm.attr('id')}")
@@ -241,13 +241,7 @@ jQuery ->
       $(this).children("span").text("Close Streams")
 
   $(".toggle-chat").live "click", (event) ->
-    showChat($(this).parent().parent())
-
-  $(".standard-sizes").live "change", (event) ->
-    temp = $(this).val().split("x")
-    width = temp[0]
-    height = temp[1]
-    changeVideoSize($(this).parent().parent(), Number(width), Number(height))
+    showChat($(this).parents(".ui-dialog").children(".stream"))
 
   $(".unlocked").live "click", (event) ->
     $(this).removeClass("unlocked").addClass("locked")
