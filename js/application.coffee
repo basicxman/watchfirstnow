@@ -98,6 +98,11 @@ addSidebarSubItem = (stream) ->
   else
     elm.find(".chiefdelphi").parent().remove()
 
+  if stream.matchArchives?
+    elm.find(".livematcharchives").attr("href", stream.matchArchives)
+  else
+    elm.find(".livematcharchives").parent().remove()
+
   return elm.html()
 
 addSidebarItem = (stream) ->
