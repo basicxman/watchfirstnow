@@ -165,7 +165,7 @@ $base: #f9f9f9;
   left: 0px;
   width: 200px;
   height: 90%;
-  z-index: 9000;
+  z-index: 3;
 
   &:hover {
     #stream-list ul li span.sidebar-event-code { display: table-cell; }
@@ -173,7 +173,6 @@ $base: #f9f9f9;
 
   #stream-list {
     height: 100%;
-    z-index: 9999;
 
     > ul {
       #toggle-sidebar {
@@ -185,7 +184,8 @@ $base: #f9f9f9;
         cursor: pointer;
         border-right: 1px solid #ddd;
         background-color: lighten($base, 5%);
-        height: 40px;
+        height: 25px;
+        font-size: 16px;
         border-top: 1px solid #ddd;
         display: table;
         padding-left: 10px;

@@ -128,7 +128,7 @@ addDialog = (id, embed, name, width, height) ->
   elm.attr("id", id)
   elm.children(".stream-embed").html(embed)
   elm.find(".inner-title").text(name)
-  title = elm.find(".stream-title").html()
+  title = elm.find(".stream-title").clone().html()
   elm.find(".stream-title").remove()
   elm.dialog({
       title: title
@@ -140,7 +140,9 @@ addDialog = (id, embed, name, width, height) ->
     , resize: resizeStream
     , dragStop: setOpenDialogCookie
     , resizeStop: setOpenDialogCookie
+    , zIndex: $.zCounter
   })
+  $.zCounter++;
 
   $("<div class='unlocked'></div>").insertAfter(elm.parent().find(".ui-dialog-titlebar span:first"))
 
@@ -166,6 +168,7 @@ addStream = (stream) ->
   if stream.chat_embed?
     chat = addDialog("chat-stream-#{stream.id}", stream.chat_embed, "#{stream.name} Chat", 320, 480)
     chat.parent().find(".title-controls").remove()
+    elm.parent().find(".chatbutton").html('<a href="javascript:void(0);" title="Toggle Chat" class="toggle-chat button">Chat</a>')
   else
     elm.parent().parent().find(".toggle-chat").remove()
 
@@ -200,6 +203,7 @@ window.loadScores = ->
   setTimeout(loadScores, 60000)
 
 jQuery ->
+  $.zCounter = 200;
   $("#stream-scores").dialog({
       title: "Match Results"
     , autoOpen: false
@@ -210,6 +214,7 @@ jQuery ->
     , resize: resizeStream
     , dragStop: setOpenDialogCookie
     , resizeStop: setOpenDialogCookie
+    , zIndex: 199
   })
   name = "Match Results"
   if openDialogState($("#stream-scores"), "stream-scores")
@@ -218,6 +223,10 @@ jQuery ->
 
   loadStream()
   loadScores()
+
+  $(".stream").live "click", (event) ->
+    $(this).dialog("option", "zIndex", $.zCounter);
+    $.zCounter++;
 
   $(".toggle-stream").live "click", (event) ->
     streamID = $(this).attr("id").substring(7)

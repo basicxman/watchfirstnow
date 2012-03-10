@@ -1,1 +1,8 @@
-<object width="100%" height="100%"> <param name="movie" value="http://fpdownload.adobe.com/strobe/FlashMediaPlayback.swf"><param name="flashvars" value="<%= @rtmp_value %>"><param name="allowFullScreen" value="true"><param name="allowscriptaccess" value="always"><embed src="http://fpdownload.adobe.com/strobe/FlashMediaPlayback.swf" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="100%" height="100%" flashvars="<%= @rtmp_value %>"></object>
+<object width="100%" height="100%">
+  <param name="movie" value="http://fpdownload.adobe.com/strobe/FlashMediaPlayback.swf">
+  <param name="flashvars" value="<%= @rtmp_value %>">
+  <param name="allowFullScreen" value="true">
+  <param name="allowscriptaccess" value="always">
+  <param name="wmode" value="opaque" />
+  <embed wmode="opaque" src="http://fpdownload.adobe.com/strobe/FlashMediaPlayback.swf" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="100%" height="100%" flashvars="<%= @rtmp_value %>">
+</object>

@@ -1,1 +1,10 @@
-<object classid="CLSID:05589FA1-C356-11CE-BF01-00AA0055595A" width="100%" height="100%" id="IFid1" class="ImageFrame_none"> <param name="ShowDisplay" value="0"/> <param name="ShowControls" value="1"/> <param name="AutoStart" value="1"/> <param name="AutoRewind" value="-1"/> <param name="Volume" value="0"/> <param name="FileName" value="<%= @embedurl %>" /> <embed src="<%= @embedurl %>" width="100%" height="100%" type="video/x-ms-wmv" controller="true" autoplay="true" loop="false"/> </object> 
+<object classid="CLSID:05589FA1-C356-11CE-BF01-00AA0055595A" width="100%" height="100%" id="IFid1" class="ImageFrame_none">
+  <param name="ShowDisplay" value="0"/>
+  <param name="ShowControls" value="1"/>
+  <param name="AutoStart" value="1"/>
+  <param name="AutoRewind" value="-1"/>
+  <param name="Volume" value="0"/>
+  <param name="FileName" value="<%= @embedurl %>" />
+  <param name="wmode" value="opaque" />
+  <embed wmode="opaque" src="<%= @embedurl %>" width="100%" height="100%" type="video/x-ms-wmv" controller="true" autoplay="true" loop="false"/>
+</object>

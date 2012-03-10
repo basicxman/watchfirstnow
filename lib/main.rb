@@ -153,12 +153,16 @@ class Streams
   end
 
   def ustream(url, name)
-    doc = Nokogiri::HTML(open(url))
+    doc   = Nokogiri::HTML(open(url))
     embed = doc.css("textarea.legacyCode").first.text
     clip  = embed.index("<br />")
     embed = embed[0...clip]
     embed.gsub! "480", "100%"
     embed.gsub! "296", "100%"
+    param_index = embed.index('<param')
+    embed = embed.insert(param_index, '<param name="wmode" value="opaque" />')
+    embed_index = embed.index('<embed ') + 7
+    embed = embed.insert(embed_index, 'wmode="opaque"')
 
     chat_embed = doc.css("#EmbedSocialStream textarea").first.text
     chat_embed.gsub! "468", "100%"
