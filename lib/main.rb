@@ -31,6 +31,7 @@ class Streams
       "id" => @streams["lastid"] + 1,
       "eventCode" => event_code
     }
+
     if url =~ /ustream/
       stream.merge! ustream(url, name)
     elsif url =~ /justin/
@@ -52,6 +53,7 @@ class Streams
     elsif url =~ /rtmp/
       stream.merge! rtmp(url, name)
     else
+      puts "Stream not recognized."
       return
     end
 

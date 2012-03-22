@@ -170,7 +170,7 @@ addStream = (stream) ->
     chat.parent().find(".title-controls").remove()
     elm.parent().find(".chatbutton").html('<a href="javascript:void(0);" title="Toggle Chat" class="toggle-chat button">Chat</a>')
   else
-    elm.parent().parent().find(".toggle-chat").remove()
+    elm.parent().find(".chatbutton").remove()
 
 showChat = (elm) ->
   chat = $("#chat-#{elm.attr('id')}")
@@ -229,6 +229,9 @@ jQuery ->
     $.zCounter++;
 
   $(".toggle-stream").live "click", (event) ->
+    if event.clientX > 200
+      return
+
     streamID = $(this).attr("id").substring(7)
     stream = $("##{streamID}")
     if stream.dialog("isOpen")
